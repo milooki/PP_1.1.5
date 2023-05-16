@@ -57,7 +57,6 @@ public class UserDaoHibernateImpl implements UserDao {
             trans = session.beginTransaction();
             session.save(user);
             trans.commit();
-
         } catch (Exception e) {
             trans.rollback();
             throw new RuntimeException(e);
@@ -83,12 +82,9 @@ public class UserDaoHibernateImpl implements UserDao {
         // return (List<User>) Util.getSessionFactory().openSession().createQuery("From User").list();
         List<User> user = new ArrayList<>();
         try (Session session = Util.getSessionFactory().openSession()) {
-            trans = session.beginTransaction();
             String SQL = "From User";
             user = session.createQuery(SQL, User.class).list();
-            trans.commit();
         } catch (Exception e) {
-            trans.rollback();
             throw new RuntimeException(e);
         }
         return user;
@@ -98,12 +94,11 @@ public class UserDaoHibernateImpl implements UserDao {
     public void cleanUsersTable() {
         try (Session session = Util.getSessionFactory().openSession()) {
             trans = session.beginTransaction();
-            String HQL = "TRUNCATE TABLE my_db_test.users";
+            String HQL = "DELETE FROM Users";
             Query query = session.createSQLQuery(HQL).addEntity(User.class);
             query.executeUpdate();
             trans.commit();
             session.close();
-
         } catch (Exception e) {
             trans.rollback();
             throw new RuntimeException(e);
